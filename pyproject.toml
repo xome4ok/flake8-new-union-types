@@ -6,7 +6,7 @@ authors = ["Dmitriy Pryanichnikov <dmitrii.prianichnikov@incountry.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.6"
 flake8 = "^3.0.0"
 attrs = "^21.4.0"
 

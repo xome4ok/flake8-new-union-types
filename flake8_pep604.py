@@ -34,11 +34,11 @@ class PEP604Checker:
 
     @classmethod
     def adapt_error(cls, e: "ExtendedError") -> Flake8Error:
-        """Adapts the extended error namedtuple to be compatible with Flake8."""
+        """Adapt the extended error namedtuple to be compatible with Flake8."""
         return e._replace(message=e.message.format(*e.vars))[:4]
 
     def load_file(self) -> None:
-        """Loads the file in a way that auto-detects source encoding and deals
+        """Load the file in a way that auto-detects source encoding and deals
         with broken terminal encodings for stdin.
         Stolen from flake8_import_order because it's good.
         """
@@ -108,4 +108,6 @@ Error = partial(partial, ExtendedError, type=PEP604Checker, vars=())
 
 
 ZQ001 = Error(message='ZQ001 Use "A | B" syntax instead of Union (PEP 604)')
-ZQ002 = Error(message='ZQ002 Use "A | None" syntax instead of Optional (PEP 604)')
+ZQ002 = Error(
+    message='ZQ002 Use "A | None" syntax instead of Optional (PEP 604)'
+)

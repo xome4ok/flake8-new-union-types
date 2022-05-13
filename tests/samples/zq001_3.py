@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Union
 
 
 def f(x: Union["X", int]):

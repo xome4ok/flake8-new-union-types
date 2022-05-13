@@ -1,6 +1,6 @@
 import ast
 from functools import partial
-from typing import Any, Iterator, NamedTuple, Tuple, Optional
+from typing import Any, Iterator, NamedTuple, Optional, Tuple
 
 import attr
 import pycodestyle
@@ -72,18 +72,23 @@ class PEP604Visitor(ast.NodeVisitor):
     futures = attr.ib(default=attr.Factory(set))
 
     @staticmethod
-    def _visit_subscript(node: ast.Subscript) -> Optional["Error"]:
+    def _visit_subscript(node: ast.Subscript) -> Optional["ExtendedError"]:
         name = None
         if isinstance(node.value, ast.Name):
             name = node.value.id
-        if isinstance(node.value, ast.Attribute) and isinstance(node.value.value,
-                                                                ast.Name) and node.value.value.id == "typing":
+        if (
+            isinstance(node.value, ast.Attribute)
+            and isinstance(node.value.value, ast.Name)
+            and node.value.value.id == "typing"
+        ):
             name = node.value.attr
 
         if name == "Union":
             return ZQ001(node.lineno, node.col_offset)
         if name == "Optional":
             return ZQ002(node.lineno, node.col_offset)
+
+        return None
 
     def visit_Subscript(self, node: ast.Subscript) -> Any:
         if error := self._visit_subscript(node):

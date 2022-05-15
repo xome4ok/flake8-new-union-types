@@ -5,6 +5,9 @@ description = "Flake8 plugin to enforce the new Union and Optional annotation sy
 authors = ["Dmitriy Pryanichnikov <dmitrii.prianichnikov@incountry.com>"]
 license = "MIT"
 
+[tool.poetry.plugins."flake8.extension"]
+ZQ = "flake8_pep604:PEP604Checker"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 flake8 = "^3.0.0"

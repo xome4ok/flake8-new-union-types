@@ -1,6 +1,5 @@
 # flake8-pep604
-
-[![Build Status](https://travis-ci.com/xome4ok/flake8-pep604.svg?branch=master)](https://travis-ci.com/xome4ok/flake8-pep604)
+[![Build Status](https://github.com/xome4ok/flake8-pep604/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/xome4ok/flake8-pep604/actions/workflows/check.yml)
 [![PyPI](https://img.shields.io/pypi/v/flake8-pep604)](https://pypi.org/project/flake8-pep604/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flake8-pep604)](https://pypi.org/project/flake8-pep604/)
 [![PyPI - License](https://img.shields.io/pypi/l/flake8-pep604)](https://pypi.org/project/flake8-pep604/)

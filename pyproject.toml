@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "flake8-pep604"
-version = "0.1.0"
+version = "0.1.2"
 description = "Flake8 plugin to enforce the new Union and Optional annotation syntax defined in PEP 604"
+readme = "README.md"
 authors = ["Dmitriy Pryanichnikov <dmitrii.prianichnikov@incountry.com>"]
 license = "MIT"
 repository = "https://github.com/xome4ok/flake8-pep604"

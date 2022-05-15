@@ -1,6 +1,6 @@
 import ast
 from functools import partial
-from typing import Any, Iterator, NamedTuple, Optional, Tuple
+from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
 
 import attr
 import pycodestyle
@@ -11,15 +11,58 @@ __version__ = "0.0.1"
 Flake8Error = Tuple[int, int, str, Any]
 
 
+class ExtendedError(NamedTuple):
+    lineno: int
+    col: int
+    message: str
+    type: Any
+    vars: Tuple[Any, ...]
+
+
+@attr.s
+class PEP604Visitor(ast.NodeVisitor):
+    filename: str = attr.ib()
+    lines: List[str] = attr.ib()
+    errors: List[ExtendedError] = attr.ib(default=attr.Factory(list))
+
+    @staticmethod
+    def _visit_subscript(
+        node: ast.Subscript,
+    ) -> Optional["Error"]:  # type: ignore
+        name = None
+        if isinstance(node.value, ast.Name):
+            name = node.value.id
+        if (
+            isinstance(node.value, ast.Attribute)
+            and isinstance(node.value.value, ast.Name)
+            and node.value.value.id == "typing"
+        ):
+            name = node.value.attr
+
+        if name == "Union":
+            return ZQ001(node.lineno, node.col_offset)
+        if name == "Optional":
+            return ZQ002(node.lineno, node.col_offset)
+
+        return None
+
+    def visit_Subscript(self, node: ast.Subscript) -> Any:
+        if error := self._visit_subscript(node):
+            self.errors.append(error)
+        self.generic_visit(node)
+
+
 @attr.s(hash=False)
 class PEP604Checker:
     name = "flake8-pep604"
     version = __version__
 
-    tree = attr.ib(default=None)
-    filename = attr.ib(default="(none)")
-    lines = attr.ib(default=None)
-    visitor = attr.ib(init=False, default=attr.Factory(lambda: PEP604Visitor))
+    tree: ast.AST = attr.ib(default=None)
+    filename: str = attr.ib(default="(none)")
+    lines: List[str] = attr.ib(default=None)
+    visitor: Type[PEP604Visitor] = attr.ib(
+        init=False, default=attr.Factory(lambda: PEP604Visitor)
+    )
 
     def run(self) -> Iterator[Flake8Error]:
         if not (self.tree and self.lines):
@@ -60,48 +103,6 @@ def _to_name_str(node: ast.AST) -> str:
         return node.id
     assert isinstance(node, ast.Attribute)
     return _to_name_str(node.value) + "." + node.attr
-
-
-@attr.s
-class PEP604Visitor(ast.NodeVisitor):
-    filename = attr.ib()
-    lines = attr.ib()
-    node_stack = attr.ib(default=attr.Factory(list))
-    node_window = attr.ib(default=attr.Factory(list))
-    errors = attr.ib(default=attr.Factory(list))
-    futures = attr.ib(default=attr.Factory(set))
-
-    @staticmethod
-    def _visit_subscript(node: ast.Subscript) -> Optional["ExtendedError"]:
-        name = None
-        if isinstance(node.value, ast.Name):
-            name = node.value.id
-        if (
-            isinstance(node.value, ast.Attribute)
-            and isinstance(node.value.value, ast.Name)
-            and node.value.value.id == "typing"
-        ):
-            name = node.value.attr
-
-        if name == "Union":
-            return ZQ001(node.lineno, node.col_offset)
-        if name == "Optional":
-            return ZQ002(node.lineno, node.col_offset)
-
-        return None
-
-    def visit_Subscript(self, node: ast.Subscript) -> Any:
-        if error := self._visit_subscript(node):
-            self.errors.append(error)
-        self.generic_visit(node)
-
-
-class ExtendedError(NamedTuple):
-    lineno: int
-    col: int
-    message: str
-    type: Any
-    vars: Tuple[Any, ...]
 
 
 Error = partial(partial, ExtendedError, type=PEP604Checker, vars=())

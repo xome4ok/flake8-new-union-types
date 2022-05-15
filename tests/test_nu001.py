@@ -1,6 +1,6 @@
 import pytest
 
-from flake8_pep604 import PEP604Checker
+from flake8_new_union_types import PEP604Checker
 
 
 class TestNU001:

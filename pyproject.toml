@@ -35,7 +35,7 @@ classifiers = [
 ]
 
 [tool.poetry.plugins."flake8.extension"]
-NU = "flake8_pep604:PEP604Checker"
+NU = "flake8_new_union_types:PEP604Checker"
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -3,10 +3,10 @@ import pytest
 from flake8_pep604 import PEP604Checker
 
 
-class TestZQ001:
+class TestNU001:
     @pytest.mark.parametrize(
         ("checker", "expected_errors"),
-        [("zq001_1.py", 9), ("zq001_2.py", 9)],
+        [("nu001_1.py", 9), ("nu001_2.py", 9)],
         indirect=["checker"],
     )
     def test_it_finds_union(
@@ -15,12 +15,12 @@ class TestZQ001:
         result = checker.run()
         errors = list(result)
         assert len(errors) == expected_errors
-        assert all(e[2].startswith("ZQ001") for e in errors)
+        assert all(e[2].startswith("NU001") for e in errors)
 
     @pytest.mark.parametrize(
         "checker",
         [
-            "zq001_3.py",
+            "nu001_3.py",
         ],
         indirect=["checker"],
     )

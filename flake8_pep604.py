@@ -5,7 +5,7 @@ from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
 import attr
 import pycodestyle
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
 
 
 Flake8Error = Tuple[int, int, str, Any]
@@ -40,9 +40,9 @@ class PEP604Visitor(ast.NodeVisitor):
             name = node.value.attr
 
         if name == "Union":
-            return ZQ001(node.lineno, node.col_offset)
+            return NU001(node.lineno, node.col_offset)
         if name == "Optional":
-            return ZQ002(node.lineno, node.col_offset)
+            return NU002(node.lineno, node.col_offset)
 
         return None
 
@@ -54,7 +54,7 @@ class PEP604Visitor(ast.NodeVisitor):
 
 @attr.s(hash=False)
 class PEP604Checker:
-    name = "flake8-pep604"
+    name = "flake8-new-union-types"
     version = __version__
 
     tree: ast.AST = attr.ib(default=None)
@@ -108,7 +108,7 @@ def _to_name_str(node: ast.AST) -> str:
 Error = partial(partial, ExtendedError, type=PEP604Checker, vars=())
 
 
-ZQ001 = Error(message='ZQ001 Use "A | B" syntax instead of Union (PEP 604)')
-ZQ002 = Error(
-    message='ZQ002 Use "A | None" syntax instead of Optional (PEP 604)'
+NU001 = Error(message='NU001 Use "A | B" syntax instead of Union (PEP 604)')
+NU002 = Error(
+    message='NU002 Use "A | None" syntax instead of Optional (PEP 604)'
 )

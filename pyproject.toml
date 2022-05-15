@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "flake8-pep604"
-version = "0.1.2"
+name = "flake8-new-union-types"
+version = "0.2.0"
 description = "Flake8 plugin to enforce the new Union and Optional annotation syntax defined in PEP 604"
 readme = "README.md"
 authors = ["Dmitriy Pryanichnikov <dmitrii.prianichnikov@incountry.com>"]
 license = "MIT"
-repository = "https://github.com/xome4ok/flake8-pep604"
-homepage = "https://github.com/xome4ok/flake8-pep604"
+repository = "https://github.com/xome4ok/flake8-new-union-types"
+homepage = "https://github.com/xome4ok/flake8-new-union-types"
 keywords = [
     "flake8",
     "flake8-plugin",
@@ -35,7 +35,7 @@ classifiers = [
 ]
 
 [tool.poetry.plugins."flake8.extension"]
-ZQ = "flake8_pep604:PEP604Checker"
+NU = "flake8_pep604:PEP604Checker"
 
 [tool.poetry.dependencies]
 python = "^3.8"

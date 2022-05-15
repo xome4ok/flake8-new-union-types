@@ -1,4 +1,5 @@
 import ast
+from contextlib import contextmanager
 from functools import partial
 from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
 
@@ -24,6 +25,7 @@ class PEP604Visitor(ast.NodeVisitor):
     filename: str = attr.ib()
     lines: List[str] = attr.ib()
     errors: List[ExtendedError] = attr.ib(default=attr.Factory(list))
+    context: List[ast.AST] = attr.ib(default=attr.Factory(list))
 
     @staticmethod
     def _visit_subscript(
@@ -46,10 +48,27 @@ class PEP604Visitor(ast.NodeVisitor):
 
         return None
 
+    def _context_tracking_generic_visit(self, node: ast.AST) -> Any:
+        self.context.append(node)
+        super().generic_visit(node)
+        self.context.pop()
+
+    @contextmanager
+    def context_tracking_generic_visit(self) -> Iterator[None]:
+        _generic_visit = self.generic_visit
+        self.generic_visit = self._context_tracking_generic_visit  # type: ignore
+        yield
+        self.generic_visit = _generic_visit  # type: ignore
+
+    def visit_Constant(self, node: ast.Constant) -> Any:
+        if self.context and isinstance(node.value, str):
+            self.errors.clear()
+
     def visit_Subscript(self, node: ast.Subscript) -> Any:
         if error := self._visit_subscript(node):
             self.errors.append(error)
-        self.generic_visit(node)
+        with self.context_tracking_generic_visit():
+            self.generic_visit(node)
 
 
 @attr.s(hash=False)

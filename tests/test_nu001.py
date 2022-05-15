@@ -24,7 +24,6 @@ class TestNU001:
         ],
         indirect=["checker"],
     )
-    @pytest.mark.xfail(reason="To be implemented")
     def test_it_allows_forward_refs(self, checker: PEP604Checker) -> None:
         result = checker.run()
         errors = list(result)

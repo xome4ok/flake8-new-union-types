@@ -16,3 +16,15 @@ class TestNU002:
         errors = list(result)
         assert len(errors) == expected_errors
         assert all(e[2].startswith("NU002") for e in errors)
+
+    @pytest.mark.parametrize(
+        "checker",
+        [
+            "nu002_3.py",
+        ],
+        indirect=["checker"],
+    )
+    def test_it_allows_forward_refs(self, checker: PEP604Checker) -> None:
+        result = checker.run()
+        errors = list(result)
+        assert not errors

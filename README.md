@@ -12,6 +12,14 @@ Union[X, Y] = X | Y
 Optional[X] = X | None
 ```
 
+Note that it's impossible to use forward references in the new syntax, like this:
+
+```python
+"X" | int
+```
+
+the plugin will not emit an error for such a case.
+
 ## Installation
 
 ```

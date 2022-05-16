@@ -30,3 +30,8 @@ D: Union[X, int] = 1
 
 
 isinstance(C, Union[int, str])
+
+
+class T:
+    a: Union[int, str]
+    b: Union["X", str, int]

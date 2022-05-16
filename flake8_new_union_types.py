@@ -25,6 +25,7 @@ class PEP604Visitor(ast.NodeVisitor):
     filename: str = attr.ib()
     lines: List[str] = attr.ib()
     errors: List[ExtendedError] = attr.ib(default=attr.Factory(list))
+    local_errors: List[ExtendedError] = attr.ib(default=attr.Factory(list))
     context: List[ast.AST] = attr.ib(default=attr.Factory(list))
 
     @staticmethod
@@ -57,17 +58,19 @@ class PEP604Visitor(ast.NodeVisitor):
     def context_tracking_generic_visit(self) -> Iterator[None]:
         _generic_visit = self.generic_visit
         self.generic_visit = self._context_tracking_generic_visit  # type: ignore
+        self.local_errors.clear()
         yield
         self.generic_visit = _generic_visit  # type: ignore
+        self.errors.extend(self.local_errors)
 
     def visit_Constant(self, node: ast.Constant) -> Any:
         if self.context and isinstance(node.value, str):
-            self.errors.clear()
+            self.local_errors.clear()
 
     def visit_Subscript(self, node: ast.Subscript) -> Any:
-        if error := self._visit_subscript(node):
-            self.errors.append(error)
         with self.context_tracking_generic_visit():
+            if error := self._visit_subscript(node):
+                self.local_errors.append(error)
             self.generic_visit(node)
 
 

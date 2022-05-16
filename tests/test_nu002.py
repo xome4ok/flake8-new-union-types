@@ -6,7 +6,7 @@ from flake8_new_union_types import PEP604Checker
 class TestNU002:
     @pytest.mark.parametrize(
         ("checker", "expected_errors"),
-        [("nu002_1.py", 9), ("nu002_2.py", 9)],
+        [("nu002_1.py", 11), ("nu002_2.py", 10)],
         indirect=["checker"],
     )
     def test_it_finds_optional(

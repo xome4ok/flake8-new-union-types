@@ -6,7 +6,7 @@ from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
 import attr
 import pycodestyle
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 Flake8Error = Tuple[int, int, str, Any]

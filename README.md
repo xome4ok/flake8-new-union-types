@@ -18,7 +18,11 @@ Note that it's impossible to use forward references in the new syntax, like this
 "X" | int
 ```
 
-the plugin will not emit an error for such a case.
+such a case [can be expressed](https://bugs.python.org/issue45857) as a string containing both union terms:
+
+```python
+"X | int"
+```
 
 ## Installation
 
@@ -36,8 +40,9 @@ poetry add --dev flake8-new-union-types
 
 ## Error list
 
-* NU001 Use "A | B" syntax instead of Union (PEP 604)
-* NU002 Use "A | None" syntax instead of Optional (PEP 604)
+* NU001 Use `Foo | Bar` syntax instead of Union (PEP 604)
+* NU002 Use `Foo | None` syntax instead of Optional (PEP 604)
+* NU003 Present the whole expression as a string to annotate forward refs, e.g. `"int | Foo"` (PEP 604)
 
 ## Configuration
 

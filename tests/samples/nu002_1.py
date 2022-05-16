@@ -30,8 +30,3 @@ D: Optional[X] = None
 
 
 isinstance(C, Optional[int])
-
-
-class T:
-    a: Optional[int]
-    b: Optional["X"]

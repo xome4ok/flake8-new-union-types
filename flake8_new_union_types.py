@@ -1,5 +1,5 @@
 import ast
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from functools import partial
 from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
 
@@ -65,13 +65,16 @@ class PEP604Visitor(ast.NodeVisitor):
 
     def visit_Constant(self, node: ast.Constant) -> Any:
         if self.context and isinstance(node.value, str):
-            self.local_errors.clear()
+            self.local_errors = [NU003(node.lineno, node.col_offset)]
 
     def visit_Subscript(self, node: ast.Subscript) -> Any:
-        with self.context_tracking_generic_visit():
-            if error := self._visit_subscript(node):
-                self.local_errors.append(error)
-            self.generic_visit(node)
+        stack = ExitStack()
+        error = self._visit_subscript(node)
+        if error:
+            stack.enter_context(self.context_tracking_generic_visit())
+            self.local_errors.append(error)
+        self.generic_visit(node)
+        stack.close()
 
 
 @attr.s(hash=False)
@@ -121,7 +124,10 @@ class PEP604Checker:
 Error = partial(partial, ExtendedError, type=PEP604Checker, vars=())
 
 
-NU001 = Error(message='NU001 Use "A | B" syntax instead of Union (PEP 604)')
+NU001 = Error(message='NU001 Use `Foo | Bar` syntax instead of Union (PEP 604)')
 NU002 = Error(
-    message='NU002 Use "A | None" syntax instead of Optional (PEP 604)'
+    message='NU002 Use `Foo | None` syntax instead of Optional (PEP 604)'
+)
+NU003 = Error(
+    message='NU003 Present the whole expression as a string to annotate forward refs, e.g. `"int | Foo"` (PEP 604)'
 )

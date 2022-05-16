@@ -118,15 +118,6 @@ class PEP604Checker:
             self.tree = ast.parse("".join(self.lines))
 
 
-def _to_name_str(node: ast.AST) -> str:
-    # Turn Name and Attribute nodes to strings, e.g "ValueError" or
-    # "pkg.mod.error", handling any depth of attribute accesses.
-    if isinstance(node, ast.Name):
-        return node.id
-    assert isinstance(node, ast.Attribute)
-    return _to_name_str(node.value) + "." + node.attr
-
-
 Error = partial(partial, ExtendedError, type=PEP604Checker, vars=())
 
 

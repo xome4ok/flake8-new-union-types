@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "flake8-new-union-types"
-version = "0.2.0"
+version = "0.3.0"
 description = "Flake8 plugin to enforce the new Union and Optional annotation syntax defined in PEP 604"
 readme = "README.md"
 authors = ["Dmitriy Pryanichnikov <dmitrii.prianichnikov@incountry.com>"]

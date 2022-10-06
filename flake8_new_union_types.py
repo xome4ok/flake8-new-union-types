@@ -95,9 +95,6 @@ class PEP604Checker:
         visitor = self.visitor(filename=self.filename, lines=self.lines)
         visitor.visit(self.tree)
         for e in visitor.errors:
-            if pycodestyle.noqa(self.lines[e.lineno - 1]):
-                continue
-
             yield self.adapt_error(e)
 
     @classmethod

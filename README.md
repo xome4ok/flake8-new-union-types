@@ -1,3 +1,7 @@
+# ⛔️ This package is deprecated
+# consider using https://github.com/astral-sh/ruff
+# as it supports this check and a lot more
+
 # flake8-new-union-types
 [![Build Status](https://github.com/xome4ok/flake8-new-union-types/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/xome4ok/flake8-new-union-types/actions/workflows/check.yml)
 [![PyPI](https://img.shields.io/pypi/v/flake8-new-union-types)](https://pypi.org/project/flake8-new-union-types/)

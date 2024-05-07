@@ -2,12 +2,19 @@ import ast
 from contextlib import contextmanager, ExitStack
 from functools import partial
 from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Type
+import warnings
 
 import attr
 import pycodestyle
 
 __version__ = "0.4.1"
 
+
+warnings.warn(
+    "flake8-new-union-types is deprecated, consider using ruff instead",
+    DeprecationWarning,
+    # stacklevel=2,
+)
 
 Flake8Error = Tuple[int, int, str, Any]
 

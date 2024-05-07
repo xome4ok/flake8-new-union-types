@@ -7,7 +7,7 @@ import warnings
 import attr
 import pycodestyle
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 
 warnings.warn(
